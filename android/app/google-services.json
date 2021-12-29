@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410637871565",
+    "firebase_url": "https://djs-app-596f7-default-rtdb.firebaseio.com",
+    "project_id": "djs-app-596f7",
+    "storage_bucket": "djs-app-596f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410637871565:android:626f1e5288cf005e89fc84",
+        "android_client_info": {
+          "package_name": "com.djs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410637871565-e9pmc95jte7ck6915k52ol5q2m3mflvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ3IYKRaajDJ882o0zjPtUw0MO3iMx0XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410637871565-e9pmc95jte7ck6915k52ol5q2m3mflvj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
