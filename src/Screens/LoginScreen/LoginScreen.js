@@ -45,7 +45,7 @@ const Login = ({ navigation }) => {
       .then(() => {
         Setloader(false);
         console.log("User account created & signed in!");
-        navigation.navigate("Home");
+        navigation.navigate("Library");
       })
       .catch((error) => {
         Setloader(false);

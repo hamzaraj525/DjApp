@@ -4,6 +4,8 @@ import styles from "./Styles";
 import Theme from "../../Utils/Theme";
 import Feather from "react-native-vector-icons/Feather";
 import Sound from "react-native-sound";
+import storage, {firebase} from "@react-native-firebase/storage";
+import database from "@react-native-firebase/database";
 
 const DATA = [
   {
@@ -14,47 +16,19 @@ const DATA = [
     id: "2",
     text: "Music One # 2",
   },
-  {
-    id: "3",
-    text: "Music One # 3",
-  },
-  {
-    id: "4",
-    text: "Music One # 4",
-  },
-  {
-    id: "5",
-    text: "Music One # 5",
-  },
-  {
-    id: "6",
-    text: "Music One # 6",
-  },
-  {
-    id: "7",
-    text: "Music One # 7",
-  },
-  {
-    id: "8",
-    text: "Music One # 8",
-  },
-  {
-    id: "9",
-    text: "Music One # 9",
-  },
-  {
-    id: "10",
-    text: "Music One # 10",
-  },
 ];
-  // const sound = new Sound(require('../../Assets/test.mp3'));
 
-const sound = new Sound({uri: "https://firebasestorage.googleapis.com/v0/b/djs-app-596f7.appspot.com/o/SJSMusic%2Ftest.mp3?alt=media&token=77c204a4-a92c-4a46-9d22-37593df56879"});
+
+
+  // const sound = new Sound(require(`${Name.Name.length > 0 ? Name.Name : 'Empty'}`));
+
+// const sound = new Sound({uri: "https://firebasestorage.googleapis.com/v0/b/djs-app-596f7.appspot.com/o/SJSMusic%2Ftest.mp3?alt=media&token=77c204a4-a92c-4a46-9d22-37593df56879"});
 
 const Home = ({ navigation }) => {
   const [icon, setIcon] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState([]);
   const [download, setDownload] = useState([]);
+  const [Name, setName] = useState('Faisal Ur Rehman');
 
   const Play = () => {
     // if (selectedIndex(index)) {
@@ -92,6 +66,8 @@ const Home = ({ navigation }) => {
       console.log("error");
     }
   };
+        console.log("Url  ", Name)
+ const sound = new Sound({uri: `${Name}`})
 
   const renderItem = ({ item, index, id }) => (
     <Item
@@ -101,10 +77,6 @@ const Home = ({ navigation }) => {
       onPress={() => Play(item.id) && setSelectedIndex(item.id)}
     />
   );
-
- 
-
- 
 
   const Item = ({ text, onPress, item }) => {
     return (
@@ -117,10 +89,12 @@ const Home = ({ navigation }) => {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <Text style={styles.title}>{text}</Text>
+        {/* <Text style={styles.title}>{text} </Text> */}
+        {/* <Text style={styles.title}> {Name.Name.length > 0 ? Name.Name : 'Empty'} </Text> */}
         <TouchableOpacity
           style={styles.download}
-          onPress={() => console.log("download")}
+          onPress={() => addSong()}
+          // onPress={() => console.log("download")}
         >
           <Feather
             name={"download"}
@@ -132,6 +106,18 @@ const Home = ({ navigation }) => {
       </View>
     );
   };
+
+
+  useEffect(() => {
+  // console.log("useEffect");
+     const reference = database().ref('/URL');
+
+    reference.on('value', snapshot => {
+      // console.log('User data: ', snapshot.val().Url);
+      setName(snapshot.val().Url)
+    })
+  }, [])
+
 
   return (
     <View style={styles.MainView}>
@@ -153,7 +139,7 @@ const Home = ({ navigation }) => {
       </View>
       <FlatList
         // horizontal={true}
-        data={DATA}
+        data={Name}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         navigation={navigation}

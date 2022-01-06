@@ -8,12 +8,57 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:410637871565:android:626f1e5288cf005e89fc84",
+        "mobilesdk_app_id": "1:410637871565:android:2009590765f6f8cb89fc84",
         "android_client_info": {
           "package_name": "com.djs"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "410637871565-ql63j9kbrgqqm3p9290kojbfsk6pfk4f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.djs",
+            "certificate_hash": "9b95434c58773f7bb08524ff15c71630e8bde266"
+          }
+        },
+        {
+          "client_id": "410637871565-e9pmc95jte7ck6915k52ol5q2m3mflvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ3IYKRaajDJ882o0zjPtUw0MO3iMx0XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410637871565-e9pmc95jte7ck6915k52ol5q2m3mflvj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410637871565:android:6dcb6cd236f7793389fc84",
+        "android_client_info": {
+          "package_name": "com.djsadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410637871565-e7uoo5p34etcesll3c298djjru39uoqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.djsadmin",
+            "certificate_hash": "2a646de23e2b9f40f8835618d3e35cbad9ee2d9a"
+          }
+        },
         {
           "client_id": "410637871565-e9pmc95jte7ck6915k52ol5q2m3mflvj.apps.googleusercontent.com",
           "client_type": 3
