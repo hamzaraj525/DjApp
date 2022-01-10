@@ -1,39 +1,39 @@
-import React, {Component} from 'react';
-import {View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import React, { Component } from 'react';
+import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
 import styles from "./Style";
 import Headers from '../../Components/Buttons/Buttons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sound from 'react-native-sound';
 import Feather from "react-native-vector-icons/Feather";
 import Theme from "../../Utils/Theme";
 import database from "@react-native-firebase/database";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
+import { MusicData } from "../redux/actions"
 // import { firestoreData } from '../redux/actions';
-// import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import NetInfo from "@react-native-community/netinfo";
 
 class Library extends Component {
-      
+  NetInfoSubscription = null;
   sound = null;
   constructor(props) {
     super(props);
     this.state = {
-      
+      conn_status: '',
       PlayList: [],
-      PlayListTwo: [],
       audioFile: '',
       recording: false,
       // loaded: false,
       paused: true,
       selectedIndex: [],
       text: false,
-      check: false,
+      connectionStatus: false,
     };
+    // this.InternetConnection();
   }
 
   selectItem = index => {
     // console.log(`this.state.selectedIndex`, this.state.selectedIndex);
-  
+
     if (this.state.selectedIndex.indexOf(index) > -1) {
       let newArray = this.state.selectedIndex.filter(indexObject => {
         if (indexObject == index) {
@@ -42,48 +42,65 @@ class Library extends Component {
         return true;
       });
 
-      this.setState({selectedIndex: newArray});
+      this.setState({ selectedIndex: newArray });
     } else {
-      this.setState({selectedIndex: [...this.state.selectedIndex, index]});
+      this.setState({ selectedIndex: [...this.state.selectedIndex, index] });
     }
   };
-  // async componentDidMount() {
-  //   this.setState({PlayList: this.props?.data});
+
+  // InternetConnection = async () => {
+  //   await NetInfo.fetch().then(state => {
+  //     console.log("Connection type", state.type);
+  //     console.log("Is connected?", state.isConnected);
+
+  //     if (state.isConnected == true) {
+  //       this.setState({ conn_status: 'online' })
+  //     } else {
+  //       this.setState({ conn_status: 'offline' })
+  //     }
+  //   });
   // }
 
-
   async componentDidMount() {
-    const reference = database().ref('/URL');  
+
+    this.NetInfoSubscription = NetInfo.addEventListener(
+      this._handleConnectivityChange,
+    );
+
+    const reference = database().ref('/URL');
 
     reference.on('value', snapshot => {
       // console.log('User data: ', snapshot.val());
-      this.setState({PlayList: snapshot.val().Url});
-
-      // if (this.state.PlayListTwo.length > 0){
-      //   for (var i = 0; i < this.state.PlayList.length; i ++){
-      //     AsyncStorage.setItem("@songs", this.state.PlayListTwo);
-      //     console.log("setData");
-      //   }
-      //   this.readData();
-      // }
+      this.setState({ PlayList: snapshot.val().Url });
+      if (this.state.connectionStatus == true) {
+        this.props?.dispatch(MusicData(this.state.PlayList))
+        console.log("ONLINE");
+      } else if (this.state.connectionStatus == false) {
+        // alert('currently you are offline');
+        console.log("Offline now");
+      }
+      // console.log(".......... ",  this.state.PlayList.Url);
     })
   }
 
-//     readData = async () => {
-//       console.log("did");
-//     try {
-//       const getData = await AsyncStorage.getItem('@songs');
-//       this.setState({PlayList: getData});
-//       console.log("$$$$$$ ", this.state.PlayList);
-//   } catch (e) {
-//     alert('Failed to fetch the data from storage')
-//   }
-// }
+  componentWillUnmount() {
+    this.NetInfoSubscription && this.NetInfoSubscription();
+  }
 
+  _handleConnectivityChange = (state) => {
+    this.setState({ connectionStatus: state.isConnected })
+    // alert(this.state.connectionStatus);
+    if (this.state.isConnected == true) {
+      console.log("Connection ", this.state.connectionStatus);
+    } else if (this.state.connectionStatus == false) {
+      console.log("Connection ", this.state.connectionStatus);
+    }
+  }
 
   load = item => {
     // console.log('load items===>', item);
     return new Promise((resolve, reject) => {
+
       if (!item) {
         return reject('file path is empty');
       }
@@ -94,7 +111,7 @@ class Library extends Component {
           return reject(error);
         }
         // this.setState({ loaded: true });
-        this.setState({paused: false});
+        this.setState({ paused: false });
         Sound.setCategory('Playback');
 
         this.sound.play(success => {
@@ -103,7 +120,7 @@ class Library extends Component {
           } else {
             console.log('playback failed due to audio decoding errors');
           }
-          this.setState({paused: true});
+          this.setState({ paused: true });
         });
         return resolve();
       });
@@ -113,24 +130,23 @@ class Library extends Component {
   pause = item => {
     console.log('Item pause', item);
     this.sound.pause();
-    this.setState({paused: true});
+    this.setState({ paused: true });
   };
-  
+
   render() {
 
-  // console.log("###$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", this.state.PlayList);
-      // console.log("%%%%%%  ", this.state.PlayList);
+    // console.log("###", this.state.PlayList);
 
-// console.log("redux data   ", this.props?.firestoreData);
-//  const { data} = this.props;
+    // console.log("redux data   ", this.props?.firestoreData);
+    const { data } = this.props;
 
-    // console.log("firestoreData ", this.props?.data);
+    // console.log("REALTIME ", this.props?.data);
 
-// console.log("##### ", this.state.selectedIndex) ;
+    // console.log("##### ", this.state.selectedIndex) ;
 
-  // const newE = this.state.selectedIndex.map((item) => {
-  //   console.log("%%%%%  ", item);
-  // })
+    // const newE = this.state.selectedIndex.map((item) => {
+    //   console.log("%%%%%  ", item);
+    // })
 
     return (
       <View style={styles.MainView}>
@@ -141,43 +157,47 @@ class Library extends Component {
         />
         <View style={styles.row}>
           <Image
-              source={require("../../Assets/Logo.jpg")}
-              style={styles.imgSplash}
-              />
-            <Text
-              style={{
+            source={require("../../Assets/Logo.jpg")}
+            style={styles.imgSplash}
+          />
+          <Text
+            style={{
               ...styles.txtWelcome,
               textAlign: Theme.align,
               alignSelf: Theme.align,
               marginLeft: 50,
-              }}
-              > SJS ADMIN </Text>
-          </View>
-      <View style={styles.deviderLast}></View>
+            }}
+          > DJS Music </Text>
+          <Feather name={this.state.connectionStatus ? 'wifi' : 'wifi-off'}
+            size={20}
+            color={'#fff'}
+            style={{ marginTop: '10%', marginLeft: '10%' }} />
+        </View>
+        <View style={styles.deviderLast}></View>
 
-        {this.state.PlayList.length > 0 ? (
+        {this.props?.data.length > 0 ? (
           <>
             <FlatList
-              data={this.state.PlayList}
-              renderItem={({item, index}) => {
+              data={this.props?.data}
+              renderItem={({ item, index }) => {
                 // console.log('item', JSON.stringify(item));
                 return (
                   <View style={styles.wrapContent}>
                     <View
                       style={styles.flexJustify}>
-                      <View style={{width: '70%'}}>
+                      <View style={{ width: '70%' }}>
                         <Text style={styles.txtName}>DJS Music</Text>
                         {/* <Text style={styles.txtName}>{item}</Text> */}
                       </View>
 
                       <TouchableOpacity onPress={() => {
-                          this.selectItem(index);
-                          {
-                            this.state.selectedIndex.indexOf(index) > -1
-                              ? this.pause()
-                              : this.load(item);
-                          }
-                        }}
+                        this.selectItem(index);
+                        {
+                          this.state.selectedIndex.indexOf(index) > -1
+                            ? this.pause()
+                            : this.load(item);
+                        }
+                      }}
                         disabled={!item}>
                         <Feather
                           name={this.state.selectedIndex.indexOf(index) > -1 ? "pause-circle" : "play-circle"}
@@ -210,7 +230,7 @@ class Library extends Component {
                           />
                         )} */}
 
-                        {/* {this.state.text == true ? <Text>test</Text> : null} */}
+                      {/* {this.state.text == true ? <Text>test</Text> : null} */}
                       {/* </TouchableOpacity> */}
                     </View>
                   </View>
@@ -225,10 +245,10 @@ class Library extends Component {
     );
   }
 }
-// const mapStateToProps = (state) => ({
-//   // firestoreData: state.reducers.firestoreData,
-//   data: state.userReducer.firestoreData,
-// });
-// export default connect(mapStateToProps)(Library);
+const mapStateToProps = (state) => ({
+  data: state.userReducer.realTimeData,
+  // data: state.userReducer.firestoreData,
+});
+export default connect(mapStateToProps)(Library);
 
-export default Library;
+// export default Library;

@@ -11,6 +11,8 @@ import Theme from "../../Utils/Theme";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { auth } from "../../Utils/Exports";
+import { useSelector, useDispatch } from "react-redux";
+import { LoginData, Uid } from "../redux/actions";
 
 const reviewSchema = yup.object({
   Email: yup.string().email("Invalid email").required("Required Field"),
@@ -27,6 +29,8 @@ const Login = ({ navigation }) => {
   const [icEye, setIcEye] = React.useState("eye-with-line");
   const [showPassword, setShowPassword] = React.useState(true);
   const [loader, Setloader] = React.useState(false);
+  const dispatch = useDispatch();
+
 
   //Set Eye Icon
   const eyeIconFun = () => {
@@ -42,18 +46,19 @@ const Login = ({ navigation }) => {
     Setloader(true);
     auth
       .signInWithEmailAndPassword(Email, Password)
-      .then(() => {
+      .then((data) => {
         Setloader(false);
+        dispatch(LoginData(data));
+        dispatch(Uid(data.user.uid));
         console.log("User account created & signed in!");
         navigation.navigate("Library");
       })
       .catch((error) => {
         Setloader(false);
-        console.log("credential invalid!");
         alert("Credential invalid!");
-        // alert(error);
       });
   };
+
 
   return (
     <View style={styles.MainView}>
@@ -138,7 +143,7 @@ const Login = ({ navigation }) => {
                   onPress={() => navigation.navigate("SignupScreen")}
                 >
                   <Text style={styles.txtNotAccount}>
-                   if you don't have an account?{" "}
+                    if you don't have an account?{" "}
                     <Text
                       style={{
                         ...styles.txtNotAccount,
