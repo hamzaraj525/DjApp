@@ -3,6 +3,7 @@ import {
   FIRESTORE,
   REALTIME,
   UID,
+  LOGOUT,
 } from "./constants";
 
 const initialState = {
@@ -26,6 +27,9 @@ function userReducer(state = initialState, action) {
 
     case REALTIME:
       return { ...state, realTimeData: action.payload };
+
+    case LOGOUT:
+      return { ...state, uid: action.payload };
 
     default:
       return state;

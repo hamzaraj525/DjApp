@@ -12,12 +12,14 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.replace('LoginScreen');
-      // if (uid) {
-      //   navigation.replace("Library");
-      // } else if (uid === undefined) {
-      //   alert("error")
-      //   navigation.replace("LoginScreen");
-      // }
+      if (uid) {
+        navigation.replace("Library");
+      } else if (uid == '') {
+        navigation.replace("LoginScreen");
+      }
+      else if (uid == undefined) {
+        navigation.replace("LoginScreen");
+      }
     }, 2000);
   }, []);
 

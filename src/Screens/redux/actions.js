@@ -3,6 +3,7 @@ import {
   FIRESTORE,
   REALTIME,
   UID,
+  LOGOUT,
 } from "./constants";
 
 export const LoginData = (data) => (dispatch) => {
@@ -31,5 +32,9 @@ export const MusicData = (data) => (dispatch) => {
     type: REALTIME, payload: data
   })
 };
+
+export const Logout = () => ({
+  type: "LOGOUT",
+});
 
 

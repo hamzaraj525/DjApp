@@ -5,15 +5,18 @@ import Headers from '../../Components/Buttons/Buttons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sound from 'react-native-sound';
 import Feather from "react-native-vector-icons/Feather";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Theme from "../../Utils/Theme";
 import database from "@react-native-firebase/database";
 import { MusicData } from "../redux/actions"
 // import { firestoreData } from '../redux/actions';
 import { connect } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
+import { Logout } from "../redux/actions";
 
 class Library extends Component {
   NetInfoSubscription = null;
+
   sound = null;
   constructor(props) {
     super(props);
@@ -133,6 +136,14 @@ class Library extends Component {
     this.setState({ paused: true });
   };
 
+
+  LogoutFun = () => {
+    console.log("Logout button click");
+    this.props?.dispatch(Logout())
+    AsyncStorage.clear();
+    this.props.navigation.replace("SplashScreen");
+  }
+
   render() {
 
     // console.log("###", this.state.PlayList);
@@ -173,6 +184,9 @@ class Library extends Component {
             color={'#fff'}
             style={{ marginTop: '10%', marginLeft: '10%' }} />
         </View>
+        <TouchableOpacity onPress={() => this.LogoutFun()} style={styles.logout}>
+          <MaterialIcons name='logout' size={20} color={'#fff'} />
+        </TouchableOpacity>
         <View style={styles.deviderLast}></View>
 
         {this.props?.data.length > 0 ? (

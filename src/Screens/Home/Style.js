@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import Theme from '../../Utils/Theme';
 const styles = StyleSheet.create({
   MainView: {
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   wrapContent: {
     width: '100%',
   },
-  deviderLast:{
+  deviderLast: {
     width: Theme.wp('95%'),
     height: 5,
     backgroundColor: Theme.white,
@@ -46,18 +46,18 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.white,
     borderWidth: 5,
     borderRadius: 10,
-    
+
   },
   imgPauseBtn: {
     width: Theme.wp('8%'),
     height: Theme.wp('8%'),
   },
-   icon: {
+  icon: {
     width: 50,
     height: 50,
     paddingTop: 10,
   },
-    txtWelcome: {
+  txtWelcome: {
     color: Theme.white,
     fontWeight: "bold",
     fontSize: Theme.txtLarge,
@@ -69,6 +69,12 @@ const styles = StyleSheet.create({
     width: Theme.wp("15%"),
     height: Theme.wp("15%"),
     margin: 20,
+  },
+  logout: {
+    position: 'absolute',
+    right: '5%',
+    marginTop: '10%',
+    height: 5
   },
 });
 
